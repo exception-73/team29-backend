@@ -14,7 +14,9 @@ export const WeeklyData = async (req, res) => {
         }
 
         const fundamentalurl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${company_name}&apikey=${process.env.ALPHA_KEY1}`;
-
+        const agent = new https.Agent({  
+            rejectUnauthorized: false
+        });
         // Make the API call with axios
         const fundamentalresponse = await axios.get(fundamentalurl);
         const fundalmentaldata = fundamentalresponse.data;
@@ -24,9 +26,7 @@ export const WeeklyData = async (req, res) => {
         console.log(url);
 
         // Create an https agent that ignores SSL certificate validation
-        const agent = new https.Agent({  
-            rejectUnauthorized: false
-        });
+   
 
         // Make the API call with axios
         const response = await axios.get(url, { httpsAgent: agent });

@@ -22,18 +22,18 @@ export const IntradayData = async (req, res) => {
             output_size = 'compact'
         }
         const fundamentalurl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${company_name}&apikey=${process.env.ALPHA_KEY1}`;
-
+        const agent = new https.Agent({  
+            rejectUnauthorized: false
+        });
         // Make the API call with axios
         const fundamentalresponse = await axios.get(fundamentalurl);
         const fundalmentaldata = fundamentalresponse.data;
-
+        
         const url = `https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=${company_name}&interval=${interval}min&output_size=${output_size}&extended_hours=false&apikey=${process.env.ALPHA_KEY1}`;
 
 
         // Create an https agent that ignores SSL certificate validation
-        const agent = new https.Agent({  
-            rejectUnauthorized: false
-        });
+   
 
         // Make the API call with axios
         const response = await axios.get(url, { httpsAgent: agent });
