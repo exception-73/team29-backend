@@ -15,16 +15,16 @@ export const MontlyData = async (req, res) => {
             });
         }
 
-        const fundamentalurl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${company_name}&apikey=${process.env.ALPHA_KEY1}`;
+        const fundamentalurl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${company_name}&apikey=${process.env.ALPHA_KEY2}`;
         const agent = new https.Agent({  
             rejectUnauthorized: false
         });
         // Make the API call with axios
-        const fundamentalresponse = await axios.get(fundamentalurl);
+        const fundamentalresponse = await axios.get(fundamentalurl, {httpsAgent : agent});
         const fundalmentaldata = fundamentalresponse.data;
 
 
-        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=${company_name}&apikey=${process.env.ALPHA_KEY1}`;
+        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol=${company_name}&apikey=${process.env.ALPHA_KEY2}`;
 
         console.log(url);
 

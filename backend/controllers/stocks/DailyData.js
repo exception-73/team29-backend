@@ -1,8 +1,9 @@
-import axios from 'axios'; // Or `const axios = require('axios');` for CommonJS
-import https from 'https'; // Add this line
 
-export const DailyData = async (req, res) => { 
-    try { 
+import axios from 'axios';
+import https from 'https';
+
+export const DailyData = async (req, res) => {
+    try {
         console.log(req.body);
         var { company_name, output_size } = req.body;
 
@@ -13,28 +14,27 @@ export const DailyData = async (req, res) => {
             });
         }
 
-        if(!output_size){
-            output_size = "compact"
+        if (!output_size) {
+            output_size = "compact";
         }
 
-        const fundamentalurl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${company_name}&apikey=${process.env.ALPHA_KEY1}`;
-        const agent = new https.Agent({  
-            rejectUnauthorized: false
+        // Set up the URL for fundamental data
+        const fundamentalurl = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${company_name}&apikey=${process.env.ALPHA_KEY2}`;
+        
+        // Set up an HTTPS agent to bypass SSL certificate validation
+        const agent = new https.Agent({
+            rejectUnauthorized: false,  // Ignore invalid certificates
         });
 
-        // Make the API call with axios
-        const fundamentalresponse = await axios.get(fundamentalurl);
+        // Make the API call for fundamental data
+        const fundamentalresponse = await axios.get(fundamentalurl, { httpsAgent: agent });
         const fundalmentaldata = fundamentalresponse.data;
-
-        
-
-        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${company_name}&output_size=${output_size}&apikey=${process.env.ALPHA_KEY}`;
-
+        console.log(fundalmentaldata)
+        // Set up the URL for daily time series data
+        const url = `https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=${company_name}&output_size=${output_size}&apikey=${process.env.ALPHA_KEY2}`;
         console.log(url);
 
-        // Create an https agent that ignores SSL certificate validation
-    
-        // Make the API call with axios
+        // Make the API call for daily data
         const response = await axios.get(url, { httpsAgent: agent });
         const data = response.data;
 
@@ -53,3 +53,4 @@ export const DailyData = async (req, res) => {
         });
     }
 };
+
